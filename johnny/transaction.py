@@ -274,11 +274,9 @@ class TransactionManager(object):
             self._originals['savepoint_rollback'] = self._getreal('savepoint_rollback')
             self._originals['savepoint_commit'] = self._getreal('savepoint_commit')
             transaction.rollback = self._patched(transaction.rollback, False)
-            #transaction.rollback_unless_managed = self._patched(transaction.rollback_unless_managed,
-                                                                       False, unless_managed=True)
+            #transaction.rollback_unless_managed = self._patched(transaction.rollback_unless_managed, False, unless_managed=True)
             transaction.commit = self._patched(transaction.commit, True)
-            #transaction.commit_unless_managed = self._patched(transaction.commit_unless_managed,
-                                                                     True, unless_managed=True)
+            #transaction.commit_unless_managed = self._patched(transaction.commit_unless_managed, True, unless_managed=True)
             transaction.savepoint = self._savepoint(transaction.savepoint)
             transaction.savepoint_rollback = self._savepoint_rollback(transaction.savepoint_rollback)
             transaction.savepoint_commit = self._savepoint_commit(transaction.savepoint_commit)

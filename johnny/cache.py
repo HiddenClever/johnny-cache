@@ -454,16 +454,17 @@ class QueryCacheBackend(object):
             tables.add(table)
 
             try:
-                 instance._meta._related_objects_cache
+                 instance._meta._get_fields_cache
             except AttributeError:
-                 instance._meta._fill_related_objects_cache()
+                 instance._meta._get_fields()
 
-            for obj in instance._meta._related_objects_cache.keys():
-                obj_table = obj.model._meta.db_table
-                if obj_table not in tables:
-                    tables.add(obj_table)
-                    if not disallowed_table(obj_table):
-                        self.keyhandler.invalidate_table(obj_table)
+            for field_cache_set in instance._meta._get_fields_cache.values():
+                for obj in field_cache_set:
+                    obj_table = obj.model._meta.db_table
+                    if obj_table not in tables:
+                        tables.add(obj_table)
+                        if not disallowed_table(obj_table):
+                            self.keyhandler.invalidate_table(obj_table)
 
     def _handle_signals(self):
         post_save.connect(self.invalidate, sender=None)

@@ -84,7 +84,7 @@ def get_tables_for_query(query):
     """
     from django.db.models.sql.where import WhereNode, SubqueryConstraint
     from django.db.models.query import QuerySet
-    tables = set([v[0] for v in getattr(query,'alias_map',{}).values()])
+    tables = set([v[0] for v in getattr(query,'alias_map',{})])
 
     def get_sub_query_tables(node):
         query = node.query_object
@@ -93,7 +93,7 @@ def get_tables_for_query(query):
         else:
             query = query._clone()
         query = query.query
-        return set(v[0] for v in getattr(query, 'alias_map',{}).values())
+        return set(v[0] for v in getattr(query, 'alias_map',{}))
 
     def get_tables(node, tables):
         if isinstance(node, SubqueryConstraint):
@@ -331,7 +331,7 @@ class QueryCacheBackend(object):
             blacklisted = disallowed_table(*tables)
 
             try:
-                ordering_aliases = cls.ordering_aliases
+                ordering_aliases = cls.ordering_parts
             except AttributeError:
                 ordering_aliases = cls.query.ordering_aliases
 
@@ -342,7 +342,7 @@ class QueryCacheBackend(object):
             if tables and not blacklisted:
                 gen_key = self.keyhandler.get_generation(*tables, **{'db': db})
                 key = self.keyhandler.sql_key(gen_key, sql, params,
-                                              cls.get_ordering(),
+                                              cls.get_order_by(),
                                               result_type, db)
                 val = self.cache_backend.get(key, NotInCache(), db)
 
